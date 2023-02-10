@@ -45,15 +45,61 @@ VALUES
 (4, 11),
 (2, 18);
 
+-- update inventory quantities
+UPDATE store_inventory
+set inventory_quantity = 50
+WHERE inventory_id IN(1,2,3,4,5);
 
-CREATE TRIGGER updatePurchaseTransaction
-AFTER INSERT ON purchase_transaction
 
-FOR EACH ROW
-    UPDATE store_inventory
-    set inventory_quantity = inventory_quantity - NEW.purchase_quantity 
-    WHERE inventory_id = NEW.inventory_id;
+-- Create Stored Procedure
+USE `beyondthebox`;
+DROP procedure IF EXISTS `purchaseTransaction`;
+
+USE `beyondthebox`;
+DROP procedure IF EXISTS `beyondthebox`.`purchaseTransaction`;
+;
+
+DELIMITER $$
+USE `beyondthebox`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `purchaseTransaction`(in inventoryID BIGINT, in quantity BIGINT)
+BEGIN
+
+DECLARE inv_quantity BIGINT;
+
+SELECT inventory_quantity INTO inv_quantity
+FROM store_inventory WHERE inventory_id = inventoryID;
+
+	IF inv_quantity <= 6 THEN
+		SELECT 'Error in query, please add item in inventory';
     
-INSERT INTO purchase_transaction (inventory_id, purchase_quantity)
-VALUES
-(1, 3); -- inventory_quantity of inventory_id = 1 will be subtracted by 3
+    ELSE
+        INSERT INTO purchase_transaction (inventory_id, purchase_quantity) VALUES
+        (inventoryID, quantity);
+        
+        UPDATE store_inventory
+		set inventory_quantity = inventory_quantity - quantity 
+		WHERE inventory_id = inventoryID; 
+        
+END IF;
+
+END$$
+
+DELIMITER ;
+;
+
+
+
+
+
+-- Disregard
+-- CREATE TRIGGER updatePurchaseTransaction
+-- AFTER INSERT ON purchase_transaction
+
+-- FOR EACH ROW
+--     UPDATE store_inventory
+--     set inventory_quantity = inventory_quantity - NEW.purchase_quantity 
+--     WHERE inventory_id = NEW.inventory_id;
+    
+-- INSERT INTO purchase_transaction (inventory_id, purchase_quantity)
+-- VALUES
+-- (1, 3); -- inventory_quantity of inventory_id = 1 will be subtracted by 3
