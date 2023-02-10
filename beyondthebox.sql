@@ -56,4 +56,4 @@ FOR EACH ROW
     
 INSERT INTO purchase_transaction (inventory_id, purchase_quantity)
 VALUES
-(1, 3) -- inventory_quantity of inventory_id = 1 will be subtracted by 3
+(1, 3); -- inventory_quantity of inventory_id = 1 will be subtracted by 3
