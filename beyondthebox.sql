@@ -69,7 +69,7 @@ DECLARE inv_quantity BIGINT;
 SELECT inventory_quantity INTO inv_quantity
 FROM store_inventory WHERE inventory_id = inventoryID;
 
-	IF inv_quantity <= 6 THEN
+	IF inv_quantity <= 5 THEN
 		SELECT 'Error in query, please add item in inventory';
     
     ELSE
