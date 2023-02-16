@@ -12,6 +12,8 @@ Repo for MySQL Task - 1
 - Query every purchase will reflect the quantity
     ○ If item < 5, error in query / need to add inventory
 
+Apply Stored Procedure
+
 
 EER diagram for beyondthebox database
 
